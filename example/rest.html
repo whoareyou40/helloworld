@@ -1,0 +1,273 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+</head>
+<script src="http://code.jquery.com/jquery-3.0.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+
+        var date = new Date();
+        var year = date.getFullYear().toString();
+        var month = (date.getMonth()+1).toString();
+        var day = date.getDate().toString();
+       // alert(year);
+        var layerName = year + month + day;
+        var dataName = year + month + day;
+
+        var baseurl = "file:data/tif/";
+
+        $("#dataName").attr("value", layerName);
+        $("#layerName").attr("value", layerName);
+
+        $("#url").attr("value", baseurl + layerName+".tif");
+
+        $("#Button1").click(function () {
+
+
+
+            $.ajax({
+                type: "get",
+                contentType: "application/xml",
+                url: "http://192.168.1.108:8080/geoserver/rest/workspaces/shanghai/coveragestores",
+                success: function (data) {
+                    alert(data.Value);
+                },
+                error: function (error) {
+                    alert("出错：" + error.responseText);
+                }
+            });
+        });
+
+        $("#Button2").click(function () {
+
+       //     var data = "<coverageStore>\n  <name>arcGridSample</name>\n  <description>Sample ASCII GRID coverage of Global rainfall.</description>\n  <type>ArcGrid</type>\n  <enabled>true</enabled>\n  <workspace>\n    <name>nurc</name>\n    <atom:link xmlns:atom=\"http://www.w3.org/2005/Atom\" rel=\"alternate\" href=\"http://localhost:8080/geoserver/rest/workspaces/nurc.xml\" type=\"application/xml\"/>\n  </workspace>\n  <__default>false</__default>\n  <url>file:coverages/arc_sample/precip30min.asc</url>\n  <coverages>\n    <atom:link xmlns:atom=\"http://www.w3.org/2005/Atom\" rel=\"alternate\" href=\"http://localhost:8080/geoserver/rest/workspaces/nurc/coveragestores/arcGridSample/coverages.xml\" type=\"application/xml\"/>\n  </coverages>\n</coverageStore>      \n"
+            var data = "<coverageStore>" +
+  	                   "<workspace>" +
+		               "<name>shanghai</name>" +
+                       "<link>http://192.168.1.108:8080/geoserver/rest/workspaces/shanghai.xml</link>" +
+		               "</workspace>" +
+	                   "<name>" + $("#dataName").val() + "</name>" +
+                       "<type>GeoTIFF</type>" +
+  		               "<enabled>true</enabled>" +
+                       "<url>"+ $("#url").val()+"</url>" +
+                       "</coverageStore>";
+           
+            $.ajax({
+                url: "http://192.168.1.108:8080/geoserver/rest/workspaces/shanghai/coveragestores",
+                type: "POST",
+                contentType: "application/xml",
+                data:data,
+                success: function (data) { alert("数据添加成功"); },
+                error: function (error) {
+                alert("出错：" + error.responseText);
+            }
+            });
+        });
+
+
+        var pro = new Array();
+        pro[0] = "PROJCS[\"WGS 84 / Pseudo-Mercator\", \n GEOGCS[\"WGS 84\", \n   DATUM[\"World Geodetic System 1984\", \n  SPHEROID[\"WGS 84\", 6378137.0, 298.257223563, AUTHORITY[\"EPSG\",\"7030\"]], \n     AUTHORITY[\"EPSG\",\"6326\"]], \n  PRIMEM[\"Greenwich\", 0.0, AUTHORITY[\"EPSG\",\"8901\"]], \n  UNIT[\"degree\", 0.017453292519943295], \n   AXIS[\"Geodetic longitude\", EAST], \n  AXIS[\"Geodetic latitude\", NORTH], \n   AUTHORITY[\"EPSG\",\"4326\"]], \n  PROJECTION[\"Popular Visualisation Pseudo Mercator\", AUTHORITY[\"EPSG\",\"1024\"]], \n  PARAMETER[\"semi_minor\", 6378137.0], \n  PARAMETER[\"latitude_of_origin\", 0.0], \n  PARAMETER[\"central_meridian\", 0.0], \n  PARAMETER[\"scale_factor\", 1.0], \n  PARAMETER[\"false_easting\", 0.0], \n  PARAMETER[\"false_northing\", 0.0], \n  UNIT[\"m\", 1.0], \n  AXIS[\"Easting\", EAST], \n  AXIS[\"Northing\", NORTH], \n  AUTHORITY[\"EPSG\",\"3857\"]]";
+        pro[1] = "GEOGCS[\"WGS 84\", \n DATUM[\"World Geodetic System 1984\", \n SPHEROID[\"WGS 84\", 6378137.0, 298.257223563, AUTHORITY[\"EPSG\",\"7030\"]], \n AUTHORITY[\"EPSG\",\"6326\"]], \n PRIMEM[\"Greenwich\", 0.0, AUTHORITY[\"EPSG\",\"8901\"]], \n UNIT[\"degree\", 0.017453292519943295], \n AXIS[\"Geodetic longitude\", EAST], \n AXIS[\"Geodetic latitude\", NORTH], \n AUTHORITY[\"EPSG\",\"4326\"]]"
+        //添加图层
+        $("#Button3").click(function () {
+
+
+
+            //  alert( $("#cs").val());
+            var checkIndex = $("#cs").get(0).selectedIndex;
+           // alert(checkIndex);
+        
+     
+            //     var data = "<coverageStore>\n  <name>arcGridSample</name>\n  <description>Sample ASCII GRID coverage of Global rainfall.</description>\n  <type>ArcGrid</type>\n  <enabled>true</enabled>\n  <workspace>\n    <name>nurc</name>\n    <atom:link xmlns:atom=\"http://www.w3.org/2005/Atom\" rel=\"alternate\" href=\"http://localhost:8080/geoserver/rest/workspaces/nurc.xml\" type=\"application/xml\"/>\n  </workspace>\n  <__default>false</__default>\n  <url>file:coverages/arc_sample/precip30min.asc</url>\n  <coverages>\n    <atom:link xmlns:atom=\"http://www.w3.org/2005/Atom\" rel=\"alternate\" href=\"http://localhost:8080/geoserver/rest/workspaces/nurc/coveragestores/arcGridSample/coverages.xml\" type=\"application/xml\"/>\n  </coverages>\n</coverageStore>      \n"
+            var data = {
+                "coverage": {
+       
+                    "dimensions": {
+                        "coverageDimension": [
+                          {
+                              "description": "GridSampleDimension[-9.999999933815813E36,-9.999999933815813E36]",
+                              "name": "GRAY_INDEX",
+                              "range": {
+                                  "max": -9.999999933815813e+36,
+                                  "min": -9.999999933815813e+36
+                              }
+                          }
+                        ]
+                    },
+                    "enabled": true,
+                    "grid": {
+                        "@dimension": "2",
+                        "crs": $("#cs").val(),
+                        "range": {
+                            "high": "634 477",
+                            "low": "0 0"
+                        },
+                        "transform": {
+                            "scaleX": 30,
+                            "scaleY": -30,
+                            "shearX": 0,
+                            "shearY": 0,
+                            "translateX": 589995,
+                            "translateY": 4927995
+                        }
+                    },
+                    "interpolationMethods": {
+                        "string": [
+                          "nearest neighbor",
+                          "bilinear",
+                          "bicubic"
+                        ]
+                    },
+                    "keywords": {
+                        "string": [
+                          "WCS",
+                          "sfdem",
+                          "sfdem",
+                          "type\\@language=fr\\;\\@vocabulary=test\\;"
+                        ]
+                    },
+                    "latLonBoundingBox": {
+                        "crs": "EPSG:4326",
+                        "maxx": 118.1669121184793,
+                        "maxy": 24.670208683915014,
+                        "minx": 118.1530050075355,
+                        "miny": 24.660939550976412
+                    },
+                    "metadata": {
+                        "entry": [
+                          {
+                              "@key": "elevation",
+                              "dimensionInfo": {
+                                  "enabled": false
+                              }
+                          },
+                          {
+                              "$": "10",
+                              "@key": "cacheAgeMax"
+                          },
+                          {
+                              "@key": "time",
+                              "dimensionInfo": {
+                                  "defaultValue": "",
+                                  "enabled": false
+                              }
+                          },
+                          {
+                              "$": "true",
+                              "@key": "cachingEnabled"
+                          },
+                          {
+                              "$": "sfdem_sfdem",
+                              "@key": "dirName"
+                          }
+                        ]
+                    },
+                    "name": "20171215",
+                    "namespace": {
+                        "href": "http://192.168.1.108:8080/geoserver/rest/namespaces/sf.json",
+                        "name": "sf"
+                    },
+                    "nativeBoundingBox": {
+                        "crs": {
+                            "$": $("#cs").val(),
+                            "@class": "projected"
+                        },
+                        "maxx": 13154280.485642625,
+                        "maxy": 2835291.2337961043,
+                        "minx": 13152732.353133954,
+                        "miny": 2834155.8006814974
+                    },
+                    "nativeCRS": {
+                        "$": pro[checkIndex],
+                        "@class": "projected"
+                    },
+                    "nativeFormat": "GeoTIFF",
+                    "nativeName": "20171215",
+           
+                    "srs": "EPSG:3857",
+                    "store": {
+                        "@class": "coverageStore",
+                        "href": "http://192.168.1.108:8080/geoserver/rest/workspaces/shanghai/coveragestores/20171215.json",
+                        "name": "shanghai:20171215"
+                    },
+                    "supportedFormats": {
+                        "string": [
+                          "ARCGRID",
+                          "IMAGEMOSAIC",
+                          "GTOPO30",
+                          "GEOTIFF",
+                          "GIF",
+                          "PNG",
+                          "JPEG",
+                          "TIFF"
+                        ]
+                    },
+                    "title": "20171215"
+                }
+            };
+           
+        //    var data = JSON.stringify(data);
+          
+
+            $.ajax({
+                url: "http://192.168.1.108:8080/geoserver/rest/workspaces/shanghai/coveragestores/test/coverages",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (data) { alert("图层添加成功"); },
+                error: function (error) {
+                    alert("出错：" + error.responseText);
+                }
+            });
+        });
+
+
+
+
+
+
+    });
+
+
+
+</script>
+
+<body>
+
+   
+    <b>步骤一：上传影像图</b> 
+    <p>
+    ftp://192.168.1.108
+    <a href="#">ftp工具</a>
+    <p>
+    <b>步骤二： 新增数据</b> 
+    <p>
+    影像图地址<input id="url" type="text" />
+    数据名称<input id="dataName" type="text"  />
+    <input id="Button2" type="button" value="新增数据" />
+    <p> 
+    <p>
+    <b>步骤三：发布图层</b> 
+    <p>
+    图层名称<input id="layerName" type="text"  />
+    源数据坐标系
+    <select id="cs">
+    <option value="EPSG:3857" selected>WGS 84 / Pseudo-Mercator</option>
+    <option value="EPSG:4326">WGS 84（long/lat)</option>
+    <option value="EPSG:4210">Beijing 1954</option>
+    <option value="EPSG:3857">Xian 1980</option>
+    </select>
+    <input id="Button3" type="button" value="发布图层" />
+     <p>
+    <b>步骤四：配置切图</b> 
+          <p>
+     <input id="Checkbox1" type="checkbox" checked />预切图
+        
+    <input id="Button4" type="button" value="开始" /><p>
+    
+
+
+</body>
+</html>

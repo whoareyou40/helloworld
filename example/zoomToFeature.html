@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Zoom To Feature</title>
+    <link href="../lib/ol.css" rel="stylesheet" type="text/css" />
+    <script src="../lib/ol.js" type="text/javascript"></script>
+    <script src="../lib/viewer.js" type="text/javascript"></script>
+    <style type="text/css">
+        #map{
+            width:100%;
+            height:100%;
+            position:absolute;
+        }
+    </style>
+</head>
+<body>
+   
+    <div id="map">
+          <input type="button" onClick="loadPolygon()" value="绘制多边形" /> 
+          <input type="button" onClick="zoomToPolygon()" value="缩放到多边形" /> 
+         <input type="button" onClick="cleanPolygon()" value="清除多边形" /> 
+
+    </div>
+    <script type="text/javascript">
+        //新建地图对象并初始化
+        var myMap = new DMap();
+        myMap.initMap();
+
+        //初始化三个多边形
+        var polygon0 = [[13534857.47251273, 3634274.9468469894], [13531188.49515504, 3609815.0977957333], [13556871.33665886, 3617153.05251111]];
+        var polygon1 = [[13232778.336729713, 3514268.812439264], [13238893.298992528, 3440889.2652854943], [13320833.793314235, 3458011.1596213738]];
+        var polygon2 = [[13295150.951810414, 3546066.6162058967], [13377091.446132123, 3448227.2200008715], [13471261.864979463, 3511822.8275341378]];
+        var coordinates = new Array();
+        coordinates[0] = polygon0;
+        coordinates[1] = polygon1;
+        coordinates[2] = polygon2;
+       
+        //加载多边形
+        function loadPolygon() {
+            myMap.loadPolygon(coordinates);
+        }
+
+        //缩放到多边形
+        function zoomToPolygon() {
+            myMap.zoomToFeature(coordinates);
+        }
+
+        //清除多边形
+        function cleanPolygon() {
+            myMap.cleanPolygon();
+        }
+    </script>
+</body>
+</html>

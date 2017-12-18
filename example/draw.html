@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>initMap</title>
+    <link href="../lib/ol.css" rel="stylesheet" type="text/css" />
+    <script src="../lib/ol.js" type="text/javascript"></script>
+    <script src="../lib/viewer.js" type="text/javascript"></script>
+    <style type="text/css">
+        #map{
+            width:100%;
+            height:100%;
+            position:absolute;
+        }
+    </style>
+</head>
+<body>
+   
+    <div id="map">
+          <input type="button" onClick="drawPolygon();" value="开始画多边形" />
+    </div>
+
+    <script type="text/javascript">
+        var map = new DMap();
+        map.initMap();//初始化地图
+
+        function drawPolygon() {
+            map.startDraw(drawDone);
+        }
+
+        function drawDone(evt) {
+        
+            var currentFeature = null; //当前绘制的几何要素
+            var geoStr = "";
+            currentFeature = evt.feature; //当前绘制的要素
+
+            var geo = currentFeature.getGeometry(); //获取要素的几何信息
+            var coordinates = geo.getCoordinates(); //获取几何坐标
+            //将几何坐标拼接为字符串
+
+            geoStr = coordinates[0].join(";");
+
+            alert("绘制的坐标是:" + geoStr);
+        }
+
+    </script>
+</body>
+</html>

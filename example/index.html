@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	    <title>jQuery : jsonTable</title>
+	    <style type="text/css">
+	        #dataTable.classy {
+	            color: red;
+	        }
+	    </style>
+    </head>
+
+    <body>
+        <table id="dataTable" style="color: black;">
+        </table>
+        
+        <br/>
+        
+        <div id="container"></div>
+        
+	    <script type="text/javascript" src="jquery.min.js"></script>
+	    <script type="text/javascript" src="jsonTable.js"></script>
+        <script type="text/javascript">
+            var jsondata;
+            var cjson = {};
+        
+                $.ajax({
+                    type: "get",
+                    contentType: "application/json",
+                    url: "http://192.168.1.108:8080/geoserver/rest/workspaces/shanghai/coveragestores",
+               
+                    success: function (json) {
+                        var json_source = json.coverageStores;
+                        cjson =  json.coverageStores;
+                        alert(JSON.stringify(json_source));
+
+                        json_source = json_source.coverageStore
+                        var options = {
+                            source: json_source,
+                            rowClass: "classy",
+                            callback: function () {
+                       //         alert("Table generated!");
+                            }
+                        };
+
+                        ///////////////////////////////
+                        // Test on a pre-existing table
+                        $("#dataTable").jsonTable({
+                            head: ['影像图名称', '发布时间'],
+                            json: ['name', 'name']
+                        });
+
+                        $("#dataTable").jsonTableUpdate(options);
+                    },
+                    error: function (error) {
+                        alert("出错：" + error.responseText);
+                    }
+                });
+
+
+	        
+	        ///////////////////////////////
+            // Test on a table not yet attached to the DOM
+            /*
+	        var testTable = $("<table></table>");
+	
+	        testTable.jsonTable({
+	            head: ['N.', '影像图名称', '发布时间', 'Market Share'],
+	            json : ['*', 'model', 'name', 'share'] // The '*' identity will be incremented at each line
+	        });
+
+	        testTable.jsonTableUpdate(options);
+	
+	        $("#container").append(testTable);*/
+        </script>
+    </body>
+</html>
